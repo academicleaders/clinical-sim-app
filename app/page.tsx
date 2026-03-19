@@ -1,65 +1,139 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+
+type Message = {
+  role: 'user' | 'assistant';
+  content: string;
+};
 
 export default function Home() {
+  const [scenarioId, setScenarioId] = useState('chest-pain');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleReset = () => {
+    setMessages([]);
+    setInput('');
+  };
+
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+
+    const userMessage: Message = {
+      role: 'user',
+      content: input,
+    };
+
+    const updatedMessages = [...messages, userMessage];
+    setMessages(updatedMessages);
+    setInput('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          scenarioId,
+          messages: updatedMessages,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.reply) {
+        setMessages([
+          ...updatedMessages,
+          {
+            role: 'assistant',
+            content: data.reply,
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error('Frontend chat error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <main className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+      <div className="w-full max-w-2xl bg-white shadow rounded p-4 flex flex-col h-[80vh]">
+        <h1 className="text-xl font-semibold mb-4">
+          Clinical Communication Simulator
+        </h1>
+
+        <div className="mb-4 flex gap-2 items-center">
+          <label className="text-sm font-medium">Scenario:</label>
+          <select
+            value={scenarioId}
+            onChange={(e) => {
+              setScenarioId(e.target.value);
+              setMessages([]);
+            }}
+            className="border rounded p-2"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <option value="chest-pain">Chest Pain</option>
+            <option value="abdominal-pain">Abdominal Pain</option>
+          </select>
+
+          <button
+            onClick={handleReset}
+            className="ml-auto bg-gray-200 px-3 py-2 rounded"
           >
-            Documentation
-          </a>
+            Reset
+          </button>
         </div>
-      </main>
-    </div>
+
+        <div className="flex-1 overflow-y-auto border p-3 rounded mb-4 space-y-3">
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`p-3 rounded max-w-[80%] ${
+                msg.role === 'user'
+                  ? 'bg-blue-100 ml-auto'
+                  : 'bg-gray-200 mr-auto'
+              }`}
+            >
+              <p className="text-sm font-medium mb-1">
+                {msg.role === 'user' ? 'You' : 'Patient'}
+              </p>
+              <p>{msg.content}</p>
+            </div>
+          ))}
+
+          {loading && (
+            <div className="p-3 rounded max-w-[80%] bg-gray-200 mr-auto">
+              <p className="text-sm font-medium mb-1">Patient</p>
+              <p>Typing...</p>
+            </div>
+          )}
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            className="flex-1 border rounded p-2"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask the patient a question..."
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSend();
+            }}
+          />
+          <button
+            onClick={handleSend}
+            disabled={loading}
+            className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+    </main>
   );
 }
