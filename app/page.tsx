@@ -7,12 +7,32 @@ type Message = {
   content: string;
 };
 
-type FeedbackData = {
-  score: number;
-  strengths: string[];
-  missed_opportunities: string[];
-  next_question: string;
-} | string;
+type FeedbackData =
+  | {
+      score: number;
+      strengths: string[];
+      missed_opportunities: string[];
+      next_question: string;
+    }
+  | string;
+
+const scenarioMeta: Record<
+  string,
+  { title: string; subtitle: string }
+> = {
+  'chest-pain': {
+    title: 'Chest Pain Scenario',
+    subtitle: 'Emergency department triage case.',
+  },
+  'abdominal-pain': {
+    title: 'Abdominal Pain Scenario',
+    subtitle: 'Urgent care abdominal pain case.',
+  },
+  'shortness-of-breath': {
+    title: 'Shortness of Breath Scenario',
+    subtitle: 'Emergency department respiratory assessment case.',
+  },
+};
 
 export default function Home() {
   const [scenarioId, setScenarioId] = useState('chest-pain');
@@ -104,6 +124,9 @@ export default function Home() {
   const structuredFeedback =
     feedback && typeof feedback !== 'string' ? feedback : null;
 
+  const currentScenario =
+    scenarioMeta[scenarioId] ?? scenarioMeta['chest-pain'];
+
   return (
     <main className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
       <div className="w-full max-w-3xl bg-white shadow rounded p-4 flex flex-col">
@@ -124,6 +147,9 @@ export default function Home() {
           >
             <option value="chest-pain">Chest Pain</option>
             <option value="abdominal-pain">Abdominal Pain</option>
+            <option value="shortness-of-breath">
+              Shortness of Breath
+            </option>
           </select>
 
           <button
@@ -135,16 +161,8 @@ export default function Home() {
         </div>
 
         <div className="mb-3 p-3 border rounded bg-gray-50">
-          <p className="text-sm font-semibold">
-            {scenarioId === 'chest-pain'
-              ? 'Chest Pain Scenario'
-              : 'Abdominal Pain Scenario'}
-          </p>
-          <p className="text-xs text-gray-600">
-            {scenarioId === 'chest-pain'
-              ? 'Emergency department triage case.'
-              : 'Urgent care abdominal pain case.'}
-          </p>
+          <p className="text-sm font-semibold">{currentScenario.title}</p>
+          <p className="text-xs text-gray-600">{currentScenario.subtitle}</p>
         </div>
 
         <div className="h-[50vh] overflow-y-auto border p-3 rounded mb-4 space-y-3">
