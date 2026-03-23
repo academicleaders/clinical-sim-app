@@ -16,10 +16,7 @@ type FeedbackData =
     }
   | string;
 
-const scenarioMeta: Record<
-  string,
-  { title: string; subtitle: string }
-> = {
+const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
   'chest-pain': {
     title: 'Chest Pain Scenario',
     subtitle: 'Emergency department triage case.',
@@ -31,6 +28,14 @@ const scenarioMeta: Record<
   'shortness-of-breath': {
     title: 'Shortness of Breath Scenario',
     subtitle: 'Emergency department respiratory assessment case.',
+  },
+  headache: {
+    title: 'Headache Scenario',
+    subtitle: 'Urgent care neurological symptom assessment case.',
+  },
+  'random-issue': {
+    title: 'Random Issue Scenario',
+    subtitle: 'General intake scenario with an unpredictable complaint.',
   },
 };
 
@@ -147,9 +152,9 @@ export default function Home() {
           >
             <option value="chest-pain">Chest Pain</option>
             <option value="abdominal-pain">Abdominal Pain</option>
-            <option value="shortness-of-breath">
-              Shortness of Breath
-            </option>
+            <option value="shortness-of-breath">Shortness of Breath</option>
+            <option value="headache">Headache</option>
+            <option value="random-issue">Random Issue</option>
           </select>
 
           <button
