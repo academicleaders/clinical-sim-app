@@ -21,6 +21,10 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Chest Pain Scenario',
     subtitle: 'Emergency department triage case.',
   },
+  'fever': {
+    title: 'Fever Scenario',
+    subtitle: 'Urgent care infection screening case.',
+  },
   'abdominal-pain': {
     title: 'Abdominal Pain Scenario',
     subtitle: 'Urgent care abdominal pain case.',
@@ -154,6 +158,7 @@ export default function Home() {
             <option value="abdominal-pain">Abdominal Pain</option>
             <option value="shortness-of-breath">Shortness of Breath</option>
             <option value="headache">Headache</option>
+            <option value="fever">Fever</option>
             <option value="random-issue">Random Issue</option>
           </select>
 
