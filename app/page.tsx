@@ -204,8 +204,9 @@ const visibleScenarios = allScenarios.filter(
   </div>
 
   {/* Scenario */}
-  <div className="flex items-center gap-2">
-    <label className="text-sm font-medium">Scenario:</label>
+  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+  <div className="flex items-center gap-2 flex-1 min-w-0">
+    <label className="text-sm font-medium shrink-0">Scenario:</label>
     <select
       value={scenarioId}
       onChange={(e) => {
@@ -213,7 +214,7 @@ const visibleScenarios = allScenarios.filter(
         setMessages([]);
         setFeedback(null);
       }}
-      className="border rounded p-2 flex-1"
+      className="border rounded p-2 flex-1 min-w-0"
     >
       {visibleScenarios.map((scenario) => (
         <option key={scenario.id} value={scenario.id}>
@@ -221,14 +222,15 @@ const visibleScenarios = allScenarios.filter(
         </option>
       ))}
     </select>
-
-    <button
-      onClick={handleReset}
-      className="bg-gray-200 px-3 py-2 rounded"
-    >
-      Reset
-    </button>
   </div>
+
+  <button
+    onClick={handleReset}
+    className="bg-gray-200 px-3 py-2 rounded sm:w-auto w-full"
+  >
+    Reset
+  </button>
+</div>
 
 </div>
 
