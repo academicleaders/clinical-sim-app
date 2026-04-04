@@ -21,6 +21,10 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Chest Pain Scenario',
     subtitle: 'Emergency department triage case.',
   },
+    'challenging-doctor-interaction': {
+    title: 'Challenging Doctor Interaction Scenario',
+    subtitle: 'Clinical communication with a skeptical doctor who pushes for clear reasoning.',
+  },
   'fever': {
     title: 'Fever Scenario',
     subtitle: 'Urgent care infection screening case.',
@@ -156,6 +160,7 @@ export default function Home() {
   { id: 'confused-patient', mode: 'patient' as const },
   { id: 'fever', mode: 'patient' as const },
   { id: 'busy-doctor-handoff', mode: 'clinical' as const },
+  { id: 'challenging-doctor-interaction', mode: 'clinical' as const },
 ];
 
 const visibleScenarios = allScenarios.filter(
