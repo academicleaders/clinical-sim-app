@@ -1,5 +1,6 @@
 export type Scenario = {
   id: string;
+  mode: 'patient' | 'clinical';
   title: string;
   clinicalContext: string;
   patientPersona: string;
@@ -13,6 +14,7 @@ export type Scenario = {
 export const scenarios: Record<string, Scenario> = {
   'chest-pain': {
     id: 'chest-pain',
+    mode: 'patient',
     title: 'Chest Pain',
     clinicalContext: 'Emergency department triage scenario.',
     patientPersona:
@@ -46,6 +48,7 @@ export const scenarios: Record<string, Scenario> = {
 
  'anxious-patient': {
     id: 'anxious-patient',
+    mode: 'patient',
     title: 'Anxious Patient',
     clinicalContext: 'Emergency department triage with an anxious patient.',
     patientPersona:
@@ -78,8 +81,41 @@ export const scenarios: Record<string, Scenario> = {
     ],
   },  
 
+    'busy-doctor-handoff': {
+    id: 'busy-doctor-handoff',
+    mode: 'clinical',
+    title: 'Busy Doctor Handoff',
+    clinicalContext: 'You are speaking to a busy doctor in an urgent clinical setting.',
+    patientPersona:
+      'You are not a patient. You are a busy doctor receiving a nurse’s verbal report about a patient. You are under time pressure, so you expect the nurse to be clear, concise, and structured.',
+    presentingComplaint:
+      'The nurse is updating you about a patient and needs to communicate the situation efficiently.',
+    historyOfPresentIllness:
+      'You are a busy doctor who interrupts if the report is vague, unfocused, or too slow. If the nurse is clear and structured, you respond efficiently and appropriately. You may ask direct follow-up questions such as “What are the vitals?” or “What exactly are you concerned about?”',
+    tone:
+      'Professional, slightly rushed, focused, and realistic. Not rude, but clearly busy.',
+    rules: [
+      'Answer only as the doctor receiving the handoff.',
+      'Do not behave like an AI assistant.',
+      'Keep responses concise and professional.',
+      'If the nurse is disorganized, ask for clarification or redirect them.',
+      'If the nurse is clear and structured, respond efficiently and move the interaction forward.',
+      'Ask realistic follow-up questions when important information is missing.',
+      'Do not turn into a teacher or evaluator during the conversation.',
+    ],
+    evaluationCriteria: [
+      'Did the nurse communicate clearly and concisely?',
+      'Did the nurse organize the handoff in a logical way?',
+      'Did the nurse identify the main concern quickly?',
+      'Did the nurse provide relevant supporting details such as symptoms, vitals, or changes in condition?',
+      'Did the nurse remain calm and professional despite the doctor being busy?',
+      'Did the nurse adapt effectively when asked for clarification?',
+    ],
+  },
+
  'confused-patient': {
     id: 'confused-patient',
+    mode: 'patient',
     title: 'Confused Patient',
     clinicalContext: 'Emergency department triage with a mildly confused patient after a head injury.',
     patientPersona:
@@ -116,6 +152,7 @@ export const scenarios: Record<string, Scenario> = {
 
   'abdominal-pain': {
     id: 'abdominal-pain',
+    mode: 'patient',
     title: 'Abdominal Pain',
     clinicalContext: 'Urgent care assessment scenario.',
     patientPersona:
@@ -149,6 +186,7 @@ export const scenarios: Record<string, Scenario> = {
 
   'shortness-of-breath': {
     id: 'shortness-of-breath',
+    mode: 'patient',
     title: 'Shortness of Breath',
     clinicalContext: 'Emergency department respiratory assessment.',
     patientPersona:
@@ -180,6 +218,7 @@ export const scenarios: Record<string, Scenario> = {
 
   'headache': {
     id: 'headache',
+    mode: 'patient',
     title: 'Headache',
     clinicalContext: 'Urgent care neurological symptom assessment.',
     patientPersona:
@@ -215,6 +254,7 @@ export const scenarios: Record<string, Scenario> = {
 
   'fever': {
     id: 'fever',
+    mode: 'patient',
     title: 'Fever',
     clinicalContext: 'Urgent care infection screening scenario.',
     patientPersona:
@@ -247,6 +287,7 @@ export const scenarios: Record<string, Scenario> = {
 
   'random-issue': {
     id: 'random-issue',
+    mode: 'patient',
     title: 'Random Issue',
     clinicalContext: 'General intake scenario with unpredictable presenting complaint.',
     patientPersona:

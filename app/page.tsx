@@ -49,9 +49,14 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Random Issue Scenario',
     subtitle: 'General intake scenario with an unpredictable complaint.',
   },
+    'busy-doctor-handoff': {
+    title: 'Busy Doctor Handoff Scenario',
+    subtitle: 'Clinical communication with a busy doctor under time pressure.',
+  },
 };
 
 export default function Home() {
+  const [mode, setMode] = useState<'patient' | 'clinical'>('patient');
   const [scenarioId, setScenarioId] = useState('chest-pain');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -141,6 +146,22 @@ export default function Home() {
   const structuredFeedback =
     feedback && typeof feedback !== 'string' ? feedback : null;
 
+  const allScenarios = [
+  { id: 'chest-pain', mode: 'patient' as const },
+  { id: 'abdominal-pain', mode: 'patient' as const },
+  { id: 'shortness-of-breath', mode: 'patient' as const },
+  { id: 'headache', mode: 'patient' as const },
+  { id: 'random-issue', mode: 'patient' as const },
+  { id: 'anxious-patient', mode: 'patient' as const },
+  { id: 'confused-patient', mode: 'patient' as const },
+  { id: 'fever', mode: 'patient' as const },
+  { id: 'busy-doctor-handoff', mode: 'clinical' as const },
+];
+
+const visibleScenarios = allScenarios.filter(
+  (scenario) => scenario.mode === mode
+);  
+
   const currentScenario =
     scenarioMeta[scenarioId] ?? scenarioMeta['chest-pain'];
 
@@ -151,34 +172,52 @@ export default function Home() {
           Clinical Communication Simulator
         </h1>
 
-        <div className="mb-4 flex gap-2 items-center">
-          <label className="text-sm font-medium">Scenario:</label>
-          <select
-            value={scenarioId}
-            onChange={(e) => {
-              setScenarioId(e.target.value);
-              setMessages([]);
-              setFeedback(null);
-            }}
-            className="border rounded p-2"
-          >
-            <option value="chest-pain">Chest Pain</option>
-            <option value="abdominal-pain">Abdominal Pain</option>
-            <option value="anxious-patient">Anxious Patient</option>
-            <option value="confused-patient">Confused Patient</option>
-            <option value="shortness-of-breath">Shortness of Breath</option>
-            <option value="headache">Headache</option>
-            <option value="fever">Fever</option>
-            <option value="random-issue">Random Issue</option>
-          </select>
+        <div className="mb-4 flex flex-wrap gap-2 items-center">
+  <label className="text-sm font-medium">Mode:</label>
+  <select
+    value={mode}
+    onChange={(e) => {
+      const newMode = e.target.value as 'patient' | 'clinical';
+      setMode(newMode);
+      setMessages([]);
+      setFeedback(null);
 
-          <button
-            onClick={handleReset}
-            className="ml-auto bg-gray-200 px-3 py-2 rounded"
-          >
-            Reset
-          </button>
-        </div>
+      if (newMode === 'patient') {
+        setScenarioId('chest-pain');
+      } else {
+        setScenarioId('busy-doctor-handoff');
+      }
+    }}
+    className="border rounded p-2"
+  >
+    <option value="patient">Patient Communication</option>
+    <option value="clinical">Clinical Communication</option>
+  </select>
+
+  <label className="text-sm font-medium ml-2">Scenario:</label>
+  <select
+    value={scenarioId}
+    onChange={(e) => {
+      setScenarioId(e.target.value);
+      setMessages([]);
+      setFeedback(null);
+    }}
+    className="border rounded p-2"
+  >
+    {visibleScenarios.map((scenario) => (
+      <option key={scenario.id} value={scenario.id}>
+        {scenarioMeta[scenario.id]?.title.replace(' Scenario', '') ?? scenario.id}
+      </option>
+    ))}
+  </select>
+
+  <button
+    onClick={handleReset}
+    className="ml-auto bg-gray-200 px-3 py-2 rounded"
+  >
+    Reset
+  </button>
+</div>
 
         <div className="mb-3 p-3 border rounded bg-gray-50">
           <p className="text-sm font-semibold">{currentScenario.title}</p>
@@ -196,7 +235,11 @@ export default function Home() {
               }`}
             >
               <p className="text-sm font-medium mb-1">
-                {msg.role === 'user' ? 'You' : 'Patient'}
+                {msg.role === 'user'
+  ? 'You'
+  : mode === 'clinical'
+  ? 'Doctor'
+  : 'Patient'}
               </p>
               <p>{msg.content}</p>
             </div>
@@ -204,7 +247,9 @@ export default function Home() {
 
           {loading && (
             <div className="p-3 rounded max-w-[80%] bg-gray-200 mr-auto">
-              <p className="text-sm font-medium mb-1">Patient</p>
+              <p className="text-sm font-medium mb-1">
+  {mode === 'clinical' ? 'Doctor' : 'Patient'}
+</p>
               <p>Typing...</p>
             </div>
           )}
