@@ -275,7 +275,11 @@ const visibleScenarios = allScenarios.filter(
             className="flex-1 border rounded p-2"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask the patient a question..."
+            placeholder={
+  mode === 'clinical'
+    ? 'Speak to the doctor...'
+    : 'Ask the patient a question...'
+}
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleSend();
             }}
