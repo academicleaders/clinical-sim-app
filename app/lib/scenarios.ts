@@ -18,7 +18,7 @@ export const scenarios: Record<string, Scenario> = {
     title: 'Chest Pain',
     clinicalContext: 'Emergency department triage scenario.',
     patientPersona:
-      'You are a 54-year-old man named Daniel. You are worried but trying to stay composed.',
+      'You are worried but trying to stay composed.',
     presentingComplaint:
       'You came in because of chest pain that started earlier today.',
     historyOfPresentIllness:
@@ -37,22 +37,21 @@ export const scenarios: Record<string, Scenario> = {
       'If asked about allergies, say none that you know of.',
     ],
     evaluationCriteria: [
-      'Did the nurse clarify onset of the chest pain?',
-      'Did the nurse assess location, character, and severity of the pain?',
-      'Did the nurse ask about radiation of the pain?',
-      'Did the nurse assess associated symptoms such as shortness of breath, sweating, nausea, or dizziness?',
-      'Did the nurse explore relevant cardiac risk factors or past medical history?',
-      'Did the nurse ask appropriate follow-up questions in a logical and calm manner?',
+      'Did the nurse communicate clearly and in natural-sounding English?',
+      'Did the nurse ask relevant follow-up questions without sounding robotic or overly scripted?',
+      'Did the nurse maintain a calm, professional tone throughout the interaction?',
+      'Did the nurse sound reassuring and appropriate for a worried patient?',
+      'Did the nurse guide the conversation in a structured and easy-to-follow way?',
     ],
   },
 
- 'anxious-patient': {
+  'anxious-patient': {
     id: 'anxious-patient',
     mode: 'patient',
     title: 'Anxious Patient',
     clinicalContext: 'Emergency department triage with an anxious patient.',
     patientPersona:
-      'You are a 45-year-old woman named Sarah. You are anxious, worried, and slightly overwhelmed, but still cooperative and trying to explain what is going on.',
+      'You are anxious, worried, and slightly overwhelmed, but still cooperative and trying to explain what is going on.',
     presentingComplaint:
       'You came in because you are not feeling well and are worried something might be wrong.',
     historyOfPresentIllness:
@@ -73,15 +72,15 @@ export const scenarios: Record<string, Scenario> = {
       'If asked about allergies, say none that you know of.',
     ],
     evaluationCriteria: [
-      'Did the nurse acknowledge and validate the patient’s anxiety or concern?',
-      'Did the nurse maintain a clear and structured approach despite the patient’s disorganized communication?',
-      'Did the nurse balance empathy with effective clinical questioning?',
-      'Did the nurse guide the interaction confidently and calmly?',
-      'Did the nurse gather key clinical information despite emotional pressure?',
+      'Did the nurse acknowledge the patient’s worry in a natural and supportive way?',
+      'Did the nurse sound calm, reassuring, and emotionally steady?',
+      'Did the nurse keep their language clear and easy to follow despite the patient’s anxiety?',
+      'Did the nurse balance empathy with efficient questioning?',
+      'Did the nurse guide the interaction confidently without sounding cold or mechanical?',
     ],
-  },  
+  },
 
-    'busy-doctor-handoff': {
+  'busy-doctor-handoff': {
     id: 'busy-doctor-handoff',
     mode: 'clinical',
     title: 'Busy Doctor Handoff',
@@ -104,22 +103,21 @@ export const scenarios: Record<string, Scenario> = {
       'Do not turn into a teacher or evaluator during the conversation.',
     ],
     evaluationCriteria: [
-      'Did the nurse communicate clearly and concisely?',
-      'Did the nurse organize the handoff in a logical way?',
-      'Did the nurse identify the main concern quickly?',
-      'Did the nurse provide relevant supporting details such as symptoms, vitals, or changes in condition?',
-      'Did the nurse remain calm and professional despite the doctor being busy?',
-      'Did the nurse adapt effectively when asked for clarification?',
+      'Did the nurse communicate clearly, concisely, and professionally?',
+      'Did the nurse organize the information in a way that was easy for the doctor to follow?',
+      'Did the nurse sound confident and appropriately direct under time pressure?',
+      'Did the nurse avoid vague, overly wordy, or awkward phrasing?',
+      'Did the nurse adapt well when the doctor asked for clarification?',
     ],
   },
 
- 'confused-patient': {
+  'confused-patient': {
     id: 'confused-patient',
     mode: 'patient',
     title: 'Confused Patient',
     clinicalContext: 'Emergency department triage with a mildly confused patient after a head injury.',
     patientPersona:
-      'You are a 68-year-old man named Peter. You are cooperative, but mildly disoriented and having some difficulty staying focused after recently hitting your head.',
+      'You are cooperative, but mildly disoriented and having some difficulty staying focused after recently hitting your head.',
     presentingComplaint:
       'You came in because you hit your head and have been feeling confused or not quite right since then.',
     historyOfPresentIllness:
@@ -142,13 +140,13 @@ export const scenarios: Record<string, Scenario> = {
       'If asked about allergies, say none that you know of.',
     ],
     evaluationCriteria: [
-      'Did the nurse adapt their language appropriately for a mildly confused patient?',
-      'Did the nurse remain calm, patient, and structured despite inconsistent or uncertain answers?',
-      'Did the nurse simplify or rephrase questions when needed?',
-      'Did the nurse gather key information about the head injury and current symptoms?',
-      'Did the nurse guide the interaction clearly and effectively despite the patient’s confusion?',
+      'Did the nurse simplify their language appropriately for a mildly confused patient?',
+      'Did the nurse remain calm, patient, and easy to understand throughout the interaction?',
+      'Did the nurse rephrase or clarify questions naturally when needed?',
+      'Did the nurse keep the conversation structured despite the patient’s inconsistent communication?',
+      'Did the nurse sound supportive and professional rather than rushed or frustrated?',
     ],
-  },  
+  },
 
   'abdominal-pain': {
     id: 'abdominal-pain',
@@ -156,7 +154,7 @@ export const scenarios: Record<string, Scenario> = {
     title: 'Abdominal Pain',
     clinicalContext: 'Urgent care assessment scenario.',
     patientPersona:
-      'You are a 29-year-old woman named Sofia. You are uncomfortable and a bit anxious.',
+      'You are uncomfortable and a bit anxious.',
     presentingComplaint:
       'You came in because of abdominal pain that started this morning.',
     historyOfPresentIllness:
@@ -175,12 +173,11 @@ export const scenarios: Record<string, Scenario> = {
       'If asked about allergies, say none that you know of.',
     ],
     evaluationCriteria: [
-      'Did the nurse clarify onset and progression of the abdominal pain?',
-      'Did the nurse assess location, character, and severity of the pain?',
-      'Did the nurse ask about associated symptoms such as nausea, vomiting, fever, appetite change, bowel changes, or urinary symptoms?',
-      'Did the nurse ask about factors that make the pain better or worse?',
-      'Did the nurse gather relevant background information such as pregnancy possibility or menstrual history when appropriate?',
-      'Did the nurse structure the assessment clearly and appropriately?',
+      'Did the nurse communicate clearly and naturally throughout the interaction?',
+      'Did the nurse ask relevant follow-up questions in a smooth and professional way?',
+      'Did the nurse keep the conversation structured and easy for the patient to follow?',
+      'Did the nurse sound calm, supportive, and appropriately reassuring?',
+      'Did the nurse avoid awkward, overly textbook-like, or robotic phrasing?',
     ],
   },
 
@@ -208,11 +205,11 @@ export const scenarios: Record<string, Scenario> = {
       'If asked about fever, say no clear fever.',
     ],
     evaluationCriteria: [
-      'Did the nurse clarify onset and progression of shortness of breath?',
-      'Did the nurse assess severity and impact on activity?',
-      'Did the nurse ask about associated symptoms such as cough, fever, chest tightness, or wheezing?',
-      'Did the nurse explore smoking history or respiratory history?',
-      'Did the nurse structure the interaction clearly and calmly?',
+      'Did the nurse sound calm and clear in a situation that could feel urgent?',
+      'Did the nurse ask relevant questions without sounding flustered or unnatural?',
+      'Did the nurse communicate in a way that was easy for the patient to follow?',
+      'Did the nurse maintain a professional and reassuring tone?',
+      'Did the nurse guide the interaction in a structured and confident way?',
     ],
   },
 
@@ -222,7 +219,7 @@ export const scenarios: Record<string, Scenario> = {
     title: 'Headache',
     clinicalContext: 'Urgent care neurological symptom assessment.',
     patientPersona:
-      'You are a 37-year-old woman named Laura. You are uncomfortable, tired, and somewhat worried because the headache is stronger than usual.',
+      'You are uncomfortable, tired, and somewhat worried because the headache is stronger than usual.',
     presentingComplaint:
       'You came in because of a headache that has been bothering you since yesterday evening.',
     historyOfPresentIllness:
@@ -243,16 +240,15 @@ export const scenarios: Record<string, Scenario> = {
       'If asked about allergies, say none that you know of.',
     ],
     evaluationCriteria: [
-      'Did the nurse clarify onset and progression of the headache?',
-      'Did the nurse assess location, character, and severity of the headache?',
-      'Did the nurse ask about associated symptoms such as nausea, vomiting, photophobia, vision changes, or dizziness?',
-      'Did the nurse assess for red flags such as fever, sudden onset, neurological symptoms, or neck stiffness?',
-      'Did the nurse ask about past headache history or relevant medical background?',
-      'Did the nurse structure the interaction clearly and calmly?',
+      'Did the nurse communicate in clear, natural, and professional English?',
+      'Did the nurse ask follow-up questions in a way that felt smooth rather than scripted?',
+      'Did the nurse sound attentive and appropriately supportive?',
+      'Did the nurse keep the conversation well organized and easy to follow?',
+      'Did the nurse use wording that felt realistic for a clinical interaction?',
     ],
   },
 
-   'challenging-doctor-interaction': {
+  'challenging-doctor-interaction': {
     id: 'challenging-doctor-interaction',
     mode: 'clinical',
     title: 'Challenging Doctor Interaction',
@@ -276,12 +272,11 @@ export const scenarios: Record<string, Scenario> = {
       'Do not turn into a teacher or evaluator during the conversation.',
     ],
     evaluationCriteria: [
-      'Did the nurse stay calm and professional under pressure?',
-      'Did the nurse justify their assessment clearly instead of making unsupported conclusions?',
-      'Did the nurse organize information logically and concisely?',
-      'Did the nurse respond effectively to direct or skeptical follow-up questions?',
-      'Did the nurse communicate with confidence without becoming defensive?',
-      'Did the nurse make the main clinical concern and rationale clear?',
+      'Did the nurse stay calm, clear, and professional under pressure?',
+      'Did the nurse express their concerns in a confident and logically organized way?',
+      'Did the nurse avoid vague or awkward phrasing when challenged?',
+      'Did the nurse respond concisely and effectively to follow-up questions?',
+      'Did the nurse sound assertive without becoming defensive or unnatural?',
     ],
   },
 
@@ -291,7 +286,7 @@ export const scenarios: Record<string, Scenario> = {
     title: 'Fever',
     clinicalContext: 'Urgent care infection screening scenario.',
     patientPersona:
-      'You are a 41-year-old man named Michael. You feel tired, achy, and mildly worried because you have had a fever since yesterday.',
+      'You feel tired, achy, and mildly worried because you have had a fever since yesterday.',
     presentingComplaint:
       'You came in because you have had a fever and generally feel unwell.',
     historyOfPresentIllness:
@@ -310,13 +305,13 @@ export const scenarios: Record<string, Scenario> = {
       'If asked about allergies, say none that you know of.',
     ],
     evaluationCriteria: [
-      'Did the nurse clarify onset and duration of the fever?',
-      'Did the nurse ask about associated symptoms such as cough, sore throat, chills, body aches, or shortness of breath?',
-      'Did the nurse assess the measured temperature or severity of fever?',
-      'Did the nurse explore possible exposure or sick contacts?',
-      'Did the nurse structure the assessment clearly and calmly?',
+      'Did the nurse communicate clearly and naturally throughout the interaction?',
+      'Did the nurse ask relevant follow-up questions in a calm and professional way?',
+      'Did the nurse sound reassuring without being overly wordy or mechanical?',
+      'Did the nurse guide the conversation in a structured and easy-to-follow manner?',
+      'Did the nurse use wording that felt realistic for a clinical conversation?',
     ],
-  },  
+  },
 
   'random-issue': {
     id: 'random-issue',
@@ -343,12 +338,11 @@ export const scenarios: Record<string, Scenario> = {
       'If asked about allergies, provide a simple realistic answer such as none known unless the chosen complaint suggests otherwise.',
     ],
     evaluationCriteria: [
-      'Did the nurse identify the main presenting complaint efficiently?',
-      'Did the nurse ask logical clarifying questions to define the problem?',
-      'Did the nurse assess onset, severity, associated symptoms, and relevant aggravating or relieving factors?',
-      'Did the nurse adapt appropriately to the specific complaint presented?',
-      'Did the nurse maintain a clear, calm, and structured communication style?',
-      'Did the nurse gather enough information to understand the likely issue before moving on?',
+      'Did the nurse adapt their language naturally to the issue that emerged?',
+      'Did the nurse sound clear, professional, and easy to understand?',
+      'Did the nurse ask logical follow-up questions without sounding scripted?',
+      'Did the nurse keep the conversation organized even though the scenario was unpredictable?',
+      'Did the nurse maintain an appropriate balance of efficiency, clarity, and warmth?',
     ],
   },
 };

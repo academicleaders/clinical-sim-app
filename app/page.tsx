@@ -25,6 +25,32 @@ type FeedbackData =
     }
   | string;
 
+type CharacterProfile = {
+  firstName: string;
+  age: number;
+  gender: 'male' | 'female';
+};
+
+function generateRandomCharacter(): CharacterProfile {
+  const maleNames = ['James', 'David', 'Michael', 'Robert', 'Daniel', 'Peter'];
+  const femaleNames = ['Maria', 'Sarah', 'Laura', 'Anna', 'Sofia', 'Emma'];
+  const genders: Array<'male' | 'female'> = ['male', 'female'];
+
+  const gender = genders[Math.floor(Math.random() * genders.length)];
+  const firstName =
+    gender === 'male'
+      ? maleNames[Math.floor(Math.random() * maleNames.length)]
+      : femaleNames[Math.floor(Math.random() * femaleNames.length)];
+
+  const age = Math.floor(Math.random() * (68 - 27 + 1)) + 27;
+
+  return {
+    firstName,
+    age,
+    gender,
+  };
+}  
+
 const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
   'chest-pain': {
     title: 'Chest Pain Scenario',
@@ -73,6 +99,9 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
 export default function Home() {
   const [mode, setMode] = useState<'patient' | 'clinical'>('patient');
   const [scenarioId, setScenarioId] = useState('chest-pain');
+  const [characterProfile, setCharacterProfile] = useState<CharacterProfile>(
+  generateRandomCharacter()
+);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -80,10 +109,14 @@ export default function Home() {
   const [feedbackLoading, setFeedbackLoading] = useState(false);
 
   const handleReset = () => {
-    setMessages([]);
-    setInput('');
-    setFeedback(null);
-  };
+  setMessages([]);
+  setInput('');
+  setFeedback(null);
+
+  if (mode === 'patient') {
+    setCharacterProfile(generateRandomCharacter());
+  }
+};
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
@@ -107,6 +140,7 @@ export default function Home() {
         body: JSON.stringify({
           scenarioId,
           messages: updatedMessages,
+          characterProfile,
         }),
       });
 
@@ -194,17 +228,18 @@ export default function Home() {
             <select
               value={mode}
               onChange={(e) => {
-                const newMode = e.target.value as 'patient' | 'clinical';
-                setMode(newMode);
-                setMessages([]);
-                setFeedback(null);
+  const newMode = e.target.value as 'patient' | 'clinical';
+  setMode(newMode);
+  setMessages([]);
+  setFeedback(null);
 
-                if (newMode === 'patient') {
-                  setScenarioId('chest-pain');
-                } else {
-                  setScenarioId('busy-doctor-handoff');
-                }
-              }}
+  if (newMode === 'patient') {
+    setScenarioId('chest-pain');
+    setCharacterProfile(generateRandomCharacter());
+  } else {
+    setScenarioId('busy-doctor-handoff');
+  }
+}}
               className="border rounded p-2 flex-1"
             >
               <option value="patient">Patient Communication</option>
@@ -220,10 +255,15 @@ export default function Home() {
               <select
                 value={scenarioId}
                 onChange={(e) => {
-                  setScenarioId(e.target.value);
-                  setMessages([]);
-                  setFeedback(null);
-                }}
+  setScenarioId(e.target.value);
+  setMessages([]);
+  setFeedback(null);
+
+  if (mode === 'patient') {
+    setCharacterProfile(generateRandomCharacter());
+  }
+}}
+
                 className="border rounded p-2 flex-1 min-w-0"
               >
                 {visibleScenarios.map((scenario) => (

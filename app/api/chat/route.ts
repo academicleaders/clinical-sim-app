@@ -5,10 +5,18 @@ import { scenarios } from '../../lib/scenarios';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { scenarioId, messages } = body;
+    const { scenarioId, messages, characterProfile } = body;
 
     const scenario = scenarios[scenarioId] ?? scenarios['chest-pain'];
+let characterDescription = '';
 
+if (scenario.mode === 'patient' && characterProfile) {
+  const { firstName, age, gender } = characterProfile;
+
+  characterDescription = `
+You are a ${age}-year-old ${gender === 'male' ? 'man' : 'woman'} named ${firstName}.
+`;
+}
     const systemPrompt = `
 You are simulating a patient in a clinical communication training scenario.
 
@@ -24,6 +32,7 @@ ${scenario.mode === 'clinical'
   : 'This is a nurse-to-patient interaction. The nurse should gather information through appropriate questioning.'}
 
 Patient persona:
+${characterDescription}
 ${scenario.patientPersona}
 
 Presenting complaint:
