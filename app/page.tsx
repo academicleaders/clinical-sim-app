@@ -9,10 +9,19 @@ type Message = {
 
 type FeedbackData =
   | {
-      score: number;
+      clarity_score: number;
+      empathy_score: number;
       strengths: string[];
-      missed_opportunities: string[];
-      next_question: string;
+      language_improvements: string[];
+      better_phrasing_example: {
+        original: string;
+        improved: string;
+      };
+      alternative_versions: {
+        more_empathetic: string;
+        more_assertive: string;
+      };
+      recommended_next_line: string;
     }
   | string;
 
@@ -21,11 +30,12 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Chest Pain Scenario',
     subtitle: 'Emergency department triage case.',
   },
-    'challenging-doctor-interaction': {
+  'challenging-doctor-interaction': {
     title: 'Challenging Doctor Interaction Scenario',
-    subtitle: 'Clinical communication with a skeptical doctor who pushes for clear reasoning.',
+    subtitle:
+      'Clinical communication with a skeptical doctor who pushes for clear reasoning.',
   },
-  'fever': {
+  fever: {
     title: 'Fever Scenario',
     subtitle: 'Urgent care infection screening case.',
   },
@@ -33,9 +43,10 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Anxious Patient Scenario',
     subtitle: 'Emergency triage with an anxious and worried patient.',
   },
-    'confused-patient': {
+  'confused-patient': {
     title: 'Confused Patient Scenario',
-    subtitle: 'Emergency triage with a mildly disoriented patient after head injury.',
+    subtitle:
+      'Emergency triage with a mildly disoriented patient after head injury.',
   },
   'abdominal-pain': {
     title: 'Abdominal Pain Scenario',
@@ -53,7 +64,7 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Random Issue Scenario',
     subtitle: 'General intake scenario with an unpredictable complaint.',
   },
-    'busy-doctor-handoff': {
+  'busy-doctor-handoff': {
     title: 'Busy Doctor Handoff Scenario',
     subtitle: 'Clinical communication with a busy doctor under time pressure.',
   },
@@ -151,21 +162,21 @@ export default function Home() {
     feedback && typeof feedback !== 'string' ? feedback : null;
 
   const allScenarios = [
-  { id: 'chest-pain', mode: 'patient' as const },
-  { id: 'abdominal-pain', mode: 'patient' as const },
-  { id: 'shortness-of-breath', mode: 'patient' as const },
-  { id: 'headache', mode: 'patient' as const },
-  { id: 'random-issue', mode: 'patient' as const },
-  { id: 'anxious-patient', mode: 'patient' as const },
-  { id: 'confused-patient', mode: 'patient' as const },
-  { id: 'fever', mode: 'patient' as const },
-  { id: 'busy-doctor-handoff', mode: 'clinical' as const },
-  { id: 'challenging-doctor-interaction', mode: 'clinical' as const },
-];
+    { id: 'chest-pain', mode: 'patient' as const },
+    { id: 'abdominal-pain', mode: 'patient' as const },
+    { id: 'shortness-of-breath', mode: 'patient' as const },
+    { id: 'headache', mode: 'patient' as const },
+    { id: 'random-issue', mode: 'patient' as const },
+    { id: 'anxious-patient', mode: 'patient' as const },
+    { id: 'confused-patient', mode: 'patient' as const },
+    { id: 'fever', mode: 'patient' as const },
+    { id: 'busy-doctor-handoff', mode: 'clinical' as const },
+    { id: 'challenging-doctor-interaction', mode: 'clinical' as const },
+  ];
 
-const visibleScenarios = allScenarios.filter(
-  (scenario) => scenario.mode === mode
-);  
+  const visibleScenarios = allScenarios.filter(
+    (scenario) => scenario.mode === mode
+  );
 
   const currentScenario =
     scenarioMeta[scenarioId] ?? scenarioMeta['chest-pain'];
@@ -178,61 +189,62 @@ const visibleScenarios = allScenarios.filter(
         </h1>
 
         <div className="mb-4 flex flex-col gap-3">
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium">Mode:</label>
+            <select
+              value={mode}
+              onChange={(e) => {
+                const newMode = e.target.value as 'patient' | 'clinical';
+                setMode(newMode);
+                setMessages([]);
+                setFeedback(null);
 
-  {/* Mode */}
-  <div className="flex items-center gap-2">
-    <label className="text-sm font-medium">Mode:</label>
-    <select
-      value={mode}
-      onChange={(e) => {
-        const newMode = e.target.value as 'patient' | 'clinical';
-        setMode(newMode);
-        setMessages([]);
-        setFeedback(null);
+                if (newMode === 'patient') {
+                  setScenarioId('chest-pain');
+                } else {
+                  setScenarioId('busy-doctor-handoff');
+                }
+              }}
+              className="border rounded p-2 flex-1"
+            >
+              <option value="patient">Patient Communication</option>
+              <option value="clinical">Clinical Communication</option>
+            </select>
+          </div>
 
-        if (newMode === 'patient') {
-          setScenarioId('chest-pain');
-        } else {
-          setScenarioId('busy-doctor-handoff');
-        }
-      }}
-      className="border rounded p-2 flex-1"
-    >
-      <option value="patient">Patient Communication</option>
-      <option value="clinical">Clinical Communication</option>
-    </select>
-  </div>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <label className="text-sm font-medium shrink-0">
+                Scenario:
+              </label>
+              <select
+                value={scenarioId}
+                onChange={(e) => {
+                  setScenarioId(e.target.value);
+                  setMessages([]);
+                  setFeedback(null);
+                }}
+                className="border rounded p-2 flex-1 min-w-0"
+              >
+                {visibleScenarios.map((scenario) => (
+                  <option key={scenario.id} value={scenario.id}>
+                    {scenarioMeta[scenario.id]?.title.replace(
+                      ' Scenario',
+                      ''
+                    ) ?? scenario.id}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-  {/* Scenario */}
-  <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-  <div className="flex items-center gap-2 flex-1 min-w-0">
-    <label className="text-sm font-medium shrink-0">Scenario:</label>
-    <select
-      value={scenarioId}
-      onChange={(e) => {
-        setScenarioId(e.target.value);
-        setMessages([]);
-        setFeedback(null);
-      }}
-      className="border rounded p-2 flex-1 min-w-0"
-    >
-      {visibleScenarios.map((scenario) => (
-        <option key={scenario.id} value={scenario.id}>
-          {scenarioMeta[scenario.id]?.title.replace(' Scenario', '') ?? scenario.id}
-        </option>
-      ))}
-    </select>
-  </div>
-
-  <button
-    onClick={handleReset}
-    className="bg-gray-200 px-3 py-2 rounded sm:w-auto w-full"
-  >
-    Reset
-  </button>
-</div>
-
-</div>
+            <button
+              onClick={handleReset}
+              className="bg-gray-200 px-3 py-2 rounded sm:w-auto w-full"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
 
         <div className="mb-3 p-3 border rounded bg-gray-50">
           <p className="text-sm font-semibold">{currentScenario.title}</p>
@@ -251,10 +263,10 @@ const visibleScenarios = allScenarios.filter(
             >
               <p className="text-sm font-medium mb-1">
                 {msg.role === 'user'
-  ? 'You'
-  : mode === 'clinical'
-  ? 'Doctor'
-  : 'Patient'}
+                  ? 'You'
+                  : mode === 'clinical'
+                  ? 'Doctor'
+                  : 'Patient'}
               </p>
               <p>{msg.content}</p>
             </div>
@@ -263,8 +275,8 @@ const visibleScenarios = allScenarios.filter(
           {loading && (
             <div className="p-3 rounded max-w-[80%] bg-gray-200 mr-auto">
               <p className="text-sm font-medium mb-1">
-  {mode === 'clinical' ? 'Doctor' : 'Patient'}
-</p>
+                {mode === 'clinical' ? 'Doctor' : 'Patient'}
+              </p>
               <p>Typing...</p>
             </div>
           )}
@@ -276,10 +288,10 @@ const visibleScenarios = allScenarios.filter(
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={
-  mode === 'clinical'
-    ? 'Speak to the doctor...'
-    : 'Ask the patient a question...'
-}
+              mode === 'clinical'
+                ? 'Speak to the doctor...'
+                : 'Ask the patient a question...'
+            }
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleSend();
             }}
@@ -299,17 +311,32 @@ const visibleScenarios = allScenarios.filter(
             disabled={messages.length === 0 || feedbackLoading}
             className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
           >
-            {feedbackLoading ? 'Generating Feedback...' : 'Get Feedback'}
+            {feedbackLoading
+              ? 'Evaluating...'
+              : mode === 'clinical'
+              ? 'Evaluate Communication'
+              : 'End Session & Evaluate'}
           </button>
         </div>
 
         {structuredFeedback && (
-          <div className="border rounded p-4 bg-gray-50 space-y-4">
+          <div className="border rounded p-4 bg-gray-50 space-y-5">
             <div>
               <h2 className="text-lg font-semibold">Feedback</h2>
-              <p className="text-2xl font-bold mt-1">
-                Score: {structuredFeedback.score}/10
-              </p>
+              <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="rounded border bg-white p-3">
+                  <p className="text-sm text-gray-600">Clarity</p>
+                  <p className="text-2xl font-bold">
+                    {structuredFeedback.clarity_score}/10
+                  </p>
+                </div>
+                <div className="rounded border bg-white p-3">
+                  <p className="text-sm text-gray-600">Empathy</p>
+                  <p className="text-2xl font-bold">
+                    {structuredFeedback.empathy_score}/10
+                  </p>
+                </div>
+              </div>
             </div>
 
             <div>
@@ -322,17 +349,51 @@ const visibleScenarios = allScenarios.filter(
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2">Missed Opportunities</h3>
+              <h3 className="font-semibold mb-2">Language Improvements</h3>
               <ul className="list-disc pl-5 space-y-1">
-                {structuredFeedback.missed_opportunities.map((item, index) => (
+                {structuredFeedback.language_improvements.map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
             </div>
 
+            <div className="rounded border bg-white p-4 space-y-2">
+              <h3 className="font-semibold">Better Phrasing Example</h3>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Original</p>
+                <p className="italic">
+                  “{structuredFeedback.better_phrasing_example.original}”
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">Improved</p>
+                <p className="font-medium">
+                  “{structuredFeedback.better_phrasing_example.improved}”
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded border bg-white p-4 space-y-3">
+              <h3 className="font-semibold">Alternative Versions</h3>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">
+                  More Empathetic
+                </p>
+                <p>{structuredFeedback.alternative_versions.more_empathetic}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 mb-1">
+                  More Assertive
+                </p>
+                <p>{structuredFeedback.alternative_versions.more_assertive}</p>
+              </div>
+            </div>
+
             <div>
-              <h3 className="font-semibold mb-2">Suggested Next Question</h3>
-              <p>{structuredFeedback.next_question}</p>
+              <h3 className="font-semibold mb-2">
+                Recommended Next Line
+              </h3>
+              <p>{structuredFeedback.recommended_next_line}</p>
             </div>
           </div>
         )}
