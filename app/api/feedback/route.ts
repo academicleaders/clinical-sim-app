@@ -37,6 +37,16 @@ This is NOT primarily a nursing-skills evaluation.
 Do NOT focus mainly on whether the nurse covered every clinical question.
 Your main job is to evaluate the quality of the nurse's English communication in a realistic clinical context.
 
+When generating feedback and improved phrasing, focus on producing natural, realistic clinical communication that reflects how a competent nurse would actually speak in a Canadian healthcare setting. Do not adopt the role of a nurse yourself; instead, evaluate and refine the user’s message so it sounds appropriate for real-world interactions with patients or doctors.
+
+Prioritize clarity, efficiency, and calm professionalism over "perfect" or overly polished English. Suggested rewrites should sound like spoken communication under mild time pressure — slightly informal but still professional, concise, and easy to follow. Avoid textbook-style phrasing, overly complete sentences, or language that feels rehearsed, literary, or artificial.
+
+Prefer spoken nurse language over written-report language. Avoid sounding corporate, therapy-like, excessively diplomatic, or unnaturally refined. The output should sound like something a competent nurse could realistically say out loud in a real Canadian clinical interaction.
+
+For empathy, ensure the phrasing briefly acknowledges the patient’s emotional state in a natural and supportive way, without becoming overly sentimental, wordy, or soft. For assertiveness, ensure the phrasing is clear, direct, and confident, without sounding cold, rigid, or confrontational.
+
+All suggestions should feel practical, human, and usable immediately in a real clinical setting, rather than idealized or overly refined versions of English.
+
 Prioritize:
 - clarity
 - naturalness of phrasing
@@ -81,12 +91,13 @@ Important instructions:
 - ${secondaryExplanation}
 - "strengths" should focus on communication strengths, not medical correctness.
 - "language_improvements" should focus on wording, phrasing, tone, awkwardness, robotic wording, or unclear English.
-- "better_phrasing_example" should pick ONE nurse line from the interaction that could be improved and provide a better, more natural version.
-- "alternative_versions.more_empathetic" should offer a more empathetic version of the nurse’s communication style.
-- "alternative_versions.more_assertive" should offer a more confident / concise / professionally assertive version.
+- "better_phrasing_example" should pick ONE nurse line from the interaction that could be improved and provide a better, more natural spoken version.
+- "alternative_versions.more_empathetic" should offer a more empathetic version of the nurse’s communication style, but still sound realistic and concise.
+- "alternative_versions.more_assertive" should offer a more confident / concise / professionally assertive version, but still sound like real spoken clinical English.
 - "recommended_next_line" must always be the next thing the NURSE should say.
 - In patient mode, this should usually be a natural next patient-facing question or statement.
 - In clinical mode, this should usually be a concise next line to the doctor.
+- Avoid overcorrecting into stiff or overly polished English.
 - Do not use markdown.
 - Do not wrap the JSON in code fences.
 - Keep the feedback practical, concise, and focused on real-world clinical English.
@@ -101,9 +112,9 @@ Important instructions:
     const text = response.output_text.trim();
 
     const cleaned = text
-      .replace(/^```json\s*/i, '')
-      .replace(/^```\s*/i, '')
-      .replace(/\s*```$/i, '')
+      .replace(/^```json\\s*/i, '')
+      .replace(/^```\\s*/i, '')
+      .replace(/\\s*```$/i, '')
       .trim();
 
     let parsed;
