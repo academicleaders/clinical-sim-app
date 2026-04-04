@@ -37,6 +37,16 @@ Return ONLY valid JSON in this exact format:
   "next_question": "..."
 }
 
+The "next_question" must always mean:
+- the next thing the USER (the nurse) should say or ask
+- not what the doctor should ask
+- not what the patient should ask
+- not a general recommendation
+- a single realistic next line for the nurse
+
+If this is a clinical communication scenario, the "next_question" should usually be the nurse’s next clarifying statement, concise report element, or focused follow-up to the doctor.
+If this is a patient communication scenario, the "next_question" should usually be the nurse’s next focused patient question.
+
 Do not use markdown.
 Do not wrap the JSON in code fences.
 Keep it concise, practical, and clinically relevant.
