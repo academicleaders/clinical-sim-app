@@ -172,51 +172,59 @@ const visibleScenarios = allScenarios.filter(
           Clinical Communication Simulator
         </h1>
 
-        <div className="mb-4 flex flex-wrap gap-2 items-center">
-  <label className="text-sm font-medium">Mode:</label>
-  <select
-    value={mode}
-    onChange={(e) => {
-      const newMode = e.target.value as 'patient' | 'clinical';
-      setMode(newMode);
-      setMessages([]);
-      setFeedback(null);
+        <div className="mb-4 flex flex-col gap-3">
 
-      if (newMode === 'patient') {
-        setScenarioId('chest-pain');
-      } else {
-        setScenarioId('busy-doctor-handoff');
-      }
-    }}
-    className="border rounded p-2"
-  >
-    <option value="patient">Patient Communication</option>
-    <option value="clinical">Clinical Communication</option>
-  </select>
+  {/* Mode */}
+  <div className="flex items-center gap-2">
+    <label className="text-sm font-medium">Mode:</label>
+    <select
+      value={mode}
+      onChange={(e) => {
+        const newMode = e.target.value as 'patient' | 'clinical';
+        setMode(newMode);
+        setMessages([]);
+        setFeedback(null);
 
-  <label className="text-sm font-medium ml-2">Scenario:</label>
-  <select
-    value={scenarioId}
-    onChange={(e) => {
-      setScenarioId(e.target.value);
-      setMessages([]);
-      setFeedback(null);
-    }}
-    className="border rounded p-2"
-  >
-    {visibleScenarios.map((scenario) => (
-      <option key={scenario.id} value={scenario.id}>
-        {scenarioMeta[scenario.id]?.title.replace(' Scenario', '') ?? scenario.id}
-      </option>
-    ))}
-  </select>
+        if (newMode === 'patient') {
+          setScenarioId('chest-pain');
+        } else {
+          setScenarioId('busy-doctor-handoff');
+        }
+      }}
+      className="border rounded p-2 flex-1"
+    >
+      <option value="patient">Patient Communication</option>
+      <option value="clinical">Clinical Communication</option>
+    </select>
+  </div>
 
-  <button
-    onClick={handleReset}
-    className="ml-auto bg-gray-200 px-3 py-2 rounded"
-  >
-    Reset
-  </button>
+  {/* Scenario */}
+  <div className="flex items-center gap-2">
+    <label className="text-sm font-medium">Scenario:</label>
+    <select
+      value={scenarioId}
+      onChange={(e) => {
+        setScenarioId(e.target.value);
+        setMessages([]);
+        setFeedback(null);
+      }}
+      className="border rounded p-2 flex-1"
+    >
+      {visibleScenarios.map((scenario) => (
+        <option key={scenario.id} value={scenario.id}>
+          {scenarioMeta[scenario.id]?.title.replace(' Scenario', '') ?? scenario.id}
+        </option>
+      ))}
+    </select>
+
+    <button
+      onClick={handleReset}
+      className="bg-gray-200 px-3 py-2 rounded"
+    >
+      Reset
+    </button>
+  </div>
+
 </div>
 
         <div className="mb-3 p-3 border rounded bg-gray-50">
