@@ -1,29 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type Message = {
   role: 'user' | 'assistant';
   content: string;
 };
-
-type FeedbackData =
-  | {
-      clarity_score: number;
-      empathy_score: number;
-      strengths: string[];
-      language_improvements: string[];
-      better_phrasing_example: {
-        original: string;
-        improved: string;
-      };
-      alternative_versions: {
-        more_empathetic: string;
-        more_assertive: string;
-      };
-      recommended_next_line: string;
-    }
-  | string;
 
 type CharacterProfile = {
   firstName: string;
@@ -49,7 +31,26 @@ function generateRandomCharacter(): CharacterProfile {
     age,
     gender,
   };
-}  
+}
+
+type FeedbackData =
+  | {
+      clarity_score: number;
+      secondary_label: string;
+      secondary_score: number;
+      strengths: string[];
+      language_improvements: string[];
+      better_phrasing_example: {
+        original: string;
+        improved: string;
+      };
+      alternative_versions: {
+        more_empathetic: string;
+        more_assertive: string;
+      };
+      recommended_next_line: string;
+    }
+  | string;
 
 const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
   'chest-pain': {
@@ -97,26 +98,30 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
 };
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
   const [mode, setMode] = useState<'patient' | 'clinical'>('patient');
   const [scenarioId, setScenarioId] = useState('chest-pain');
-  const [characterProfile, setCharacterProfile] = useState<CharacterProfile>(
-  generateRandomCharacter()
-);
+  const [characterProfile, setCharacterProfile] =
+    useState<CharacterProfile>(generateRandomCharacter());
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
   const [feedbackLoading, setFeedbackLoading] = useState(false);
 
-  const handleReset = () => {
-  setMessages([]);
-  setInput('');
-  setFeedback(null);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  if (mode === 'patient') {
-    setCharacterProfile(generateRandomCharacter());
-  }
-};
+  const handleReset = () => {
+    setMessages([]);
+    setInput('');
+    setFeedback(null);
+
+    if (mode === 'patient') {
+      setCharacterProfile(generateRandomCharacter());
+    }
+  };
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
@@ -154,6 +159,8 @@ export default function Home() {
             content: data.reply,
           },
         ]);
+      } else {
+        console.error('No reply returned from /api/chat:', data);
       }
     } catch (error) {
       console.error('Frontend chat error:', error);
@@ -228,18 +235,18 @@ export default function Home() {
             <select
               value={mode}
               onChange={(e) => {
-  const newMode = e.target.value as 'patient' | 'clinical';
-  setMode(newMode);
-  setMessages([]);
-  setFeedback(null);
+                const newMode = e.target.value as 'patient' | 'clinical';
+                setMode(newMode);
+                setMessages([]);
+                setFeedback(null);
 
-  if (newMode === 'patient') {
-    setScenarioId('chest-pain');
-    setCharacterProfile(generateRandomCharacter());
-  } else {
-    setScenarioId('busy-doctor-handoff');
-  }
-}}
+                if (newMode === 'patient') {
+                  setScenarioId('chest-pain');
+                  setCharacterProfile(generateRandomCharacter());
+                } else {
+                  setScenarioId('busy-doctor-handoff');
+                }
+              }}
               className="border rounded p-2 flex-1"
             >
               <option value="patient">Patient Communication</option>
@@ -255,15 +262,14 @@ export default function Home() {
               <select
                 value={scenarioId}
                 onChange={(e) => {
-  setScenarioId(e.target.value);
-  setMessages([]);
-  setFeedback(null);
+                  setScenarioId(e.target.value);
+                  setMessages([]);
+                  setFeedback(null);
 
-  if (mode === 'patient') {
-    setCharacterProfile(generateRandomCharacter());
-  }
-}}
-
+                  if (mode === 'patient') {
+                    setCharacterProfile(generateRandomCharacter());
+                  }
+                }}
                 className="border rounded p-2 flex-1 min-w-0"
               >
                 {visibleScenarios.map((scenario) => (
@@ -289,6 +295,11 @@ export default function Home() {
         <div className="mb-3 p-3 border rounded bg-gray-50">
           <p className="text-sm font-semibold">{currentScenario.title}</p>
           <p className="text-xs text-gray-600">{currentScenario.subtitle}</p>
+          {mode === 'patient' && mounted && (
+            <p className="text-xs text-gray-500 mt-1">
+              {characterProfile.firstName}, {characterProfile.age}
+            </p>
+          )}
         </div>
 
         <div className="h-[50vh] overflow-y-auto border p-3 rounded mb-4 space-y-3">
@@ -371,9 +382,11 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="rounded border bg-white p-3">
-                  <p className="text-sm text-gray-600">Empathy</p>
+                  <p className="text-sm text-gray-600">
+                    {structuredFeedback.secondary_label}
+                  </p>
                   <p className="text-2xl font-bold">
-                    {structuredFeedback.empathy_score}/10
+                    {structuredFeedback.secondary_score}/10
                   </p>
                 </div>
               </div>

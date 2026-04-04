@@ -11,15 +11,24 @@ export async function POST(req: NextRequest) {
 
     const transcript = messages
       .map((msg: { role: string; content: string }) => {
-        const speaker = msg.role === 'user'
-          ? 'Nurse'
-          : scenario.mode === 'clinical'
-          ? 'Doctor'
-          : 'Patient';
+        const speaker =
+          msg.role === 'user'
+            ? 'Nurse'
+            : scenario.mode === 'clinical'
+            ? 'Doctor'
+            : 'Patient';
 
         return `${speaker}: ${msg.content}`;
       })
       .join('\n');
+
+    const secondaryLabel =
+      scenario.mode === 'clinical' ? 'Professionalism' : 'Empathy';
+
+    const secondaryExplanation =
+      scenario.mode === 'clinical'
+        ? 'For clinical communication, the secondary score must be Professionalism. Judge calmness, concise wording, confidence, appropriate tone, and how well the nurse communicates under pressure with another clinician.'
+        : 'For patient communication, the secondary score must be Empathy. Judge warmth, reassurance, emotional awareness, and whether the nurse sounds human and supportive when appropriate.';
 
     const prompt = `
 You are evaluating a clinical English communication simulation.
@@ -49,7 +58,8 @@ Return ONLY valid JSON in this exact format:
 
 {
   "clarity_score": number,
-  "empathy_score": number,
+  "secondary_label": "${secondaryLabel}",
+  "secondary_score": number,
   "strengths": ["...", "..."],
   "language_improvements": ["...", "..."],
   "better_phrasing_example": {
@@ -66,7 +76,9 @@ Return ONLY valid JSON in this exact format:
 Important instructions:
 - Score from 1 to 10.
 - "clarity_score" should reflect how clear, natural, and easy to follow the nurse’s language was.
-- "empathy_score" should reflect warmth, reassurance, and emotional awareness where appropriate.
+- "secondary_label" must be exactly "${secondaryLabel}".
+- "secondary_score" must evaluate the meaning of "${secondaryLabel}", not a generic second score.
+- ${secondaryExplanation}
 - "strengths" should focus on communication strengths, not medical correctness.
 - "language_improvements" should focus on wording, phrasing, tone, awkwardness, robotic wording, or unclear English.
 - "better_phrasing_example" should pick ONE nurse line from the interaction that could be improved and provide a better, more natural version.
