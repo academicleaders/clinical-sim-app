@@ -166,7 +166,7 @@ const visibleScenarios = allScenarios.filter(
     scenarioMeta[scenarioId] ?? scenarioMeta['chest-pain'];
 
   return (
-    <main className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+    <main className="min-h-screen bg-gray-100 flex flex-col items-center p-3 sm:p-6">
       <div className="w-full max-w-3xl bg-white shadow rounded p-4 flex flex-col">
         <h1 className="text-xl font-semibold mb-4">
           Clinical Communication Simulator

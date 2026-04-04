@@ -18,6 +18,11 @@ ${scenario.title}
 Clinical context:
 ${scenario.clinicalContext}
 
+Interaction type:
+${scenario.mode === 'clinical'
+  ? 'This is a clinical communication between a nurse and a doctor. The nurse is reporting and should NOT ask patient-style questions. Focus on clarity, structure, and appropriate escalation.'
+  : 'This is a nurse-to-patient interaction. The nurse should gather information through appropriate questioning.'}
+
 Patient persona:
 ${scenario.patientPersona}
 
