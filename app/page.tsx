@@ -111,6 +111,10 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Limited English Patient Scenario',
     subtitle: 'Patient with very basic English requiring simple and clear communication.',
   },
+  'minimizing-doctor': {
+    title: 'Minimizing Doctor Scenario',
+    subtitle: 'Clinical communication with a doctor who initially downplays the concern.',
+  },
 };
 
 export default function Home() {
@@ -232,6 +236,7 @@ export default function Home() {
     { id: 'unclear-patient', mode: 'patient' as const },
     { id: 'frustrated-patient', mode: 'patient' as const },
     { id: 'limited-english-patient', mode: 'patient' as const },
+    { id: 'minimizing-doctor', mode: 'clinical' as const },
 { id: 'jargon-doctor', mode: 'clinical' as const },
 
   ];
