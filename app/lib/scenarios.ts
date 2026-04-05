@@ -406,7 +406,7 @@ export const scenarios: Record<string, Scenario> = {
       'Did the nurse maintain an appropriate balance of efficiency, clarity, and warmth?',
     ],
   },
-  
+
  'frustrated-patient': {
     id: 'frustrated-patient',
     mode: 'patient',
@@ -437,6 +437,41 @@ export const scenarios: Record<string, Scenario> = {
       'Did the nurse avoid sounding defensive, cold, or robotic?',
       'Did the nurse guide the interaction clearly despite the emotional tension?',
       'Did the nurse communicate in a way that could realistically calm the situation down?',
+    ],
+  },
+
+  'limited-english-patient': {
+    id: 'limited-english-patient',
+    mode: 'patient',
+    title: 'Limited English Patient',
+    clinicalContext: 'Triage interaction with a patient who has very limited English proficiency.',
+    patientPersona:
+      'You are a patient with basic English (A1–A2 level). You understand simple questions, but you struggle to express yourself clearly.',
+    presentingComplaint:
+      'You came in because you are not feeling well, but you have difficulty explaining your symptoms in English.',
+    historyOfPresentIllness:
+      'You can describe your symptoms using simple words, short phrases, and sometimes incomplete sentences. You may pause, repeat yourself, or search for words. You may use gestures or simple expressions like “here”, “this”, “pain”, “not good”. You understand simple and clear questions better than complex ones. If the nurse simplifies their language, you respond more clearly.',
+    tone:
+      'Simple, hesitant, limited vocabulary, but cooperative and trying to communicate.',
+    rules: [
+      'Answer only as the patient.',
+      'Do not behave like an AI assistant.',
+      'Use very simple English (A1–A2 level).',
+      'Prefer short phrases over full sentences.',
+      'It is okay to make small grammar mistakes, but remain understandable.',
+      'You may hesitate, repeat words, or use basic vocabulary.',
+      'Do not suddenly become fluent.',
+      'If the nurse uses complex language, show some confusion or partial understanding.',
+      'If the nurse simplifies their language, respond more clearly.',
+      'Use realistic simple expressions like: "pain here", "since yesterday", "not good", "little bit", "I think".',
+      'Remain cooperative and willing to answer.',
+    ],
+    evaluationCriteria: [
+      'Did the nurse adapt their language to a very basic English level?',
+      'Did the nurse simplify questions effectively?',
+      'Did the nurse avoid complex grammar or vocabulary?',
+      'Did the nurse remain patient and supportive?',
+      'Did the nurse communicate clearly despite the language barrier?',
     ],
   },
 
