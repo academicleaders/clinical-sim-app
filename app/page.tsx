@@ -96,18 +96,18 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     subtitle: 'Clinical communication with a busy doctor under time pressure.',
   },
   'unclear-patient': {
-  title: 'Unclear Patient Scenario',
-  subtitle: 'Patient who struggles to explain symptoms clearly.',
-},
-'jargon-doctor': {
-  title: 'Jargon-Rich Doctor Scenario',
-  subtitle: 'Doctor who speaks quickly using compressed and technical language.',
-},
-'frustrated-patient': {
+    title: 'Unclear Patient Scenario',
+    subtitle: 'Patient who struggles to explain symptoms clearly.',
+  },
+  'jargon-doctor': {
+    title: 'Jargon-Rich Doctor Scenario',
+    subtitle: 'Doctor who speaks quickly using compressed and technical language.',
+  },
+  'frustrated-patient': {
     title: 'Frustrated Patient Scenario',
     subtitle: 'Triage interaction with an angry patient who has been waiting too long.',
   },
-   'limited-english-patient': {
+  'limited-english-patient': {
     title: 'Limited English Patient Scenario',
     subtitle: 'Patient with very basic English requiring simple and clear communication.',
   },
@@ -237,8 +237,7 @@ export default function Home() {
     { id: 'frustrated-patient', mode: 'patient' as const },
     { id: 'limited-english-patient', mode: 'patient' as const },
     { id: 'minimizing-doctor', mode: 'clinical' as const },
-{ id: 'jargon-doctor', mode: 'clinical' as const },
-
+    { id: 'jargon-doctor', mode: 'clinical' as const },
   ];
 
   const visibleScenarios = allScenarios.filter(
@@ -249,15 +248,18 @@ export default function Home() {
     scenarioMeta[scenarioId] ?? scenarioMeta['chest-pain'];
 
   return (
-    <main className="min-h-screen bg-gray-100 flex flex-col items-center p-3 sm:p-6">
-      <div className="w-full max-w-3xl bg-white shadow rounded p-4 flex flex-col">
-        <h1 className="text-xl font-semibold mb-4">
+    <main
+      className="min-h-screen bg-gray-100 text-black flex flex-col items-center p-3 sm:p-6"
+      style={{ colorScheme: 'light' }}
+    >
+      <div className="w-full max-w-3xl bg-white text-black shadow rounded p-4 flex flex-col">
+        <h1 className="text-xl font-semibold mb-4 text-black">
           Clinical Communication Simulator
         </h1>
 
         <div className="mb-4 flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium">Mode:</label>
+            <label className="text-sm font-medium text-black">Mode:</label>
             <select
               value={mode}
               onChange={(e) => {
@@ -273,7 +275,7 @@ export default function Home() {
                   setScenarioId('busy-doctor-handoff');
                 }
               }}
-              className="border rounded p-2 flex-1"
+              className="border border-black rounded p-2 flex-1 bg-white text-black"
             >
               <option value="patient">Patient Communication</option>
               <option value="clinical">Clinical Communication</option>
@@ -282,7 +284,7 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
             <div className="flex items-center gap-2 flex-1 min-w-0">
-              <label className="text-sm font-medium shrink-0">
+              <label className="text-sm font-medium shrink-0 text-black">
                 Scenario:
               </label>
               <select
@@ -296,7 +298,7 @@ export default function Home() {
                     setCharacterProfile(generateRandomCharacter());
                   }
                 }}
-                className="border rounded p-2 flex-1 min-w-0"
+                className="border border-black rounded p-2 flex-1 min-w-0 bg-white text-black"
               >
                 {visibleScenarios.map((scenario) => (
                   <option key={scenario.id} value={scenario.id}>
@@ -311,57 +313,57 @@ export default function Home() {
 
             <button
               onClick={handleReset}
-              className="bg-gray-200 px-3 py-2 rounded sm:w-auto w-full"
+              className="bg-gray-200 text-black px-3 py-2 rounded sm:w-auto w-full border border-gray-300"
             >
               Reset
             </button>
           </div>
         </div>
 
-        <div className="mb-3 p-3 border rounded bg-gray-50">
-          <p className="text-sm font-semibold">{currentScenario.title}</p>
-          <p className="text-xs text-gray-600">{currentScenario.subtitle}</p>
+        <div className="mb-3 p-3 border border-black rounded bg-gray-50 text-black">
+          <p className="text-sm font-semibold text-black">{currentScenario.title}</p>
+          <p className="text-xs text-gray-700">{currentScenario.subtitle}</p>
           {mode === 'patient' && mounted && (
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-700 mt-1">
               {characterProfile.firstName}, {characterProfile.age}
             </p>
           )}
         </div>
 
-        <div className="h-[50vh] overflow-y-auto border p-3 rounded mb-4 space-y-3">
+        <div className="h-[50vh] overflow-y-auto border border-black p-3 rounded mb-4 space-y-3 bg-white">
           {messages.map((msg, index) => (
             <div
               key={index}
-              className={`p-3 rounded max-w-[80%] ${
+              className={`p-3 rounded max-w-[80%] border ${
                 msg.role === 'user'
-                  ? 'bg-blue-100 ml-auto'
-                  : 'bg-gray-200 mr-auto'
+                  ? 'bg-blue-100 border-blue-200 ml-auto text-black'
+                  : 'bg-gray-200 border-gray-300 mr-auto text-black'
               }`}
             >
-              <p className="text-sm font-medium mb-1">
+              <p className="text-sm font-medium mb-1 text-black">
                 {msg.role === 'user'
                   ? 'You'
                   : mode === 'clinical'
                   ? 'Doctor'
                   : 'Patient'}
               </p>
-              <p>{msg.content}</p>
+              <p className="text-black">{msg.content}</p>
             </div>
           ))}
 
           {loading && (
-            <div className="p-3 rounded max-w-[80%] bg-gray-200 mr-auto">
-              <p className="text-sm font-medium mb-1">
+            <div className="p-3 rounded max-w-[80%] bg-gray-200 border border-gray-300 mr-auto text-black">
+              <p className="text-sm font-medium mb-1 text-black">
                 {mode === 'clinical' ? 'Doctor' : 'Patient'}
               </p>
-              <p>Typing...</p>
+              <p className="text-black">Typing...</p>
             </div>
           )}
         </div>
 
         <div className="flex gap-2 mb-4">
           <input
-            className="flex-1 border rounded p-2"
+            className="flex-1 border border-black rounded p-2 bg-white text-black placeholder:text-gray-500"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={
@@ -397,21 +399,21 @@ export default function Home() {
         </div>
 
         {structuredFeedback && (
-          <div className="border rounded p-4 bg-gray-50 space-y-5">
+          <div className="border border-black rounded p-4 bg-gray-50 text-black space-y-5">
             <div>
-              <h2 className="text-lg font-semibold">Feedback</h2>
+              <h2 className="text-lg font-semibold text-black">Feedback</h2>
               <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="rounded border bg-white p-3">
-                  <p className="text-sm text-gray-600">Clarity</p>
-                  <p className="text-2xl font-bold">
+                <div className="rounded border border-black bg-white p-3">
+                  <p className="text-sm text-gray-700">Clarity</p>
+                  <p className="text-2xl font-bold text-black">
                     {structuredFeedback.clarity_score}/10
                   </p>
                 </div>
-                <div className="rounded border bg-white p-3">
-                  <p className="text-sm text-gray-600">
+                <div className="rounded border border-black bg-white p-3">
+                  <p className="text-sm text-gray-700">
                     {structuredFeedback.secondary_label}
                   </p>
-                  <p className="text-2xl font-bold">
+                  <p className="text-2xl font-bold text-black">
                     {structuredFeedback.secondary_score}/10
                   </p>
                 </div>
@@ -419,8 +421,8 @@ export default function Home() {
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2">Strengths</h3>
-              <ul className="list-disc pl-5 space-y-1">
+              <h3 className="font-semibold mb-2 text-black">Strengths</h3>
+              <ul className="list-disc pl-5 space-y-1 text-black">
                 {structuredFeedback.strengths.map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
@@ -428,59 +430,59 @@ export default function Home() {
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2">Language Improvements</h3>
-              <ul className="list-disc pl-5 space-y-1">
+              <h3 className="font-semibold mb-2 text-black">Language Improvements</h3>
+              <ul className="list-disc pl-5 space-y-1 text-black">
                 {structuredFeedback.language_improvements.map((item, index) => (
                   <li key={index}>{item}</li>
                 ))}
               </ul>
             </div>
 
-            <div className="rounded border bg-white p-4 space-y-2">
-              <h3 className="font-semibold">Better Phrasing Example</h3>
+            <div className="rounded border border-black bg-white p-4 space-y-2">
+              <h3 className="font-semibold text-black">Better Phrasing Example</h3>
               <div>
-                <p className="text-sm text-gray-600 mb-1">Original</p>
-                <p className="italic">
+                <p className="text-sm text-gray-700 mb-1">Original</p>
+                <p className="italic text-black">
                   “{structuredFeedback.better_phrasing_example.original}”
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">Improved</p>
-                <p className="font-medium">
+                <p className="text-sm text-gray-700 mb-1">Improved</p>
+                <p className="font-medium text-black">
                   “{structuredFeedback.better_phrasing_example.improved}”
                 </p>
               </div>
             </div>
 
-            <div className="rounded border bg-white p-4 space-y-3">
-              <h3 className="font-semibold">Alternative Versions</h3>
+            <div className="rounded border border-black bg-white p-4 space-y-3">
+              <h3 className="font-semibold text-black">Alternative Versions</h3>
               <div>
-                <p className="text-sm text-gray-600 mb-1">
-  {mode === 'clinical' ? 'More Clear' : 'More Empathetic'}
-</p>
-<p>{structuredFeedback.alternative_versions.more_empathetic}</p>
+                <p className="text-sm text-gray-700 mb-1">
+                  {mode === 'clinical' ? 'More Clear' : 'More Empathetic'}
+                </p>
+                <p className="text-black">
+                  {structuredFeedback.alternative_versions.more_empathetic}
+                </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">
-                  More Assertive
+                <p className="text-sm text-gray-700 mb-1">More Assertive</p>
+                <p className="text-black">
+                  {structuredFeedback.alternative_versions.more_assertive}
                 </p>
-                <p>{structuredFeedback.alternative_versions.more_assertive}</p>
               </div>
             </div>
 
             <div>
-              <h3 className="font-semibold mb-2">
-                Recommended Next Line
-              </h3>
-              <p>{structuredFeedback.recommended_next_line}</p>
+              <h3 className="font-semibold mb-2 text-black">Recommended Next Line</h3>
+              <p className="text-black">{structuredFeedback.recommended_next_line}</p>
             </div>
           </div>
         )}
 
         {feedback && typeof feedback === 'string' && (
-          <div className="border rounded p-4 bg-gray-50 whitespace-pre-wrap">
-            <h2 className="text-lg font-semibold mb-2">Feedback</h2>
-            <p>{feedback}</p>
+          <div className="border border-black rounded p-4 bg-gray-50 whitespace-pre-wrap text-black">
+            <h2 className="text-lg font-semibold mb-2 text-black">Feedback</h2>
+            <p className="text-black">{feedback}</p>
           </div>
         )}
       </div>
