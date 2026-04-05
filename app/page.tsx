@@ -95,6 +95,14 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Busy Doctor Handoff Scenario',
     subtitle: 'Clinical communication with a busy doctor under time pressure.',
   },
+  'unclear-patient': {
+  title: 'Unclear Patient Scenario',
+  subtitle: 'Patient who struggles to explain symptoms clearly.',
+},
+'jargon-doctor': {
+  title: 'Jargon-Rich Doctor Scenario',
+  subtitle: 'Doctor who speaks quickly using compressed and technical language.',
+},
 };
 
 export default function Home() {
@@ -213,6 +221,9 @@ export default function Home() {
     { id: 'fever', mode: 'patient' as const },
     { id: 'busy-doctor-handoff', mode: 'clinical' as const },
     { id: 'challenging-doctor-interaction', mode: 'clinical' as const },
+    { id: 'unclear-patient', mode: 'patient' as const },
+{ id: 'jargon-doctor', mode: 'clinical' as const },
+
   ];
 
   const visibleScenarios = allScenarios.filter(
