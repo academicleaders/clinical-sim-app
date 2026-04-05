@@ -8,13 +8,15 @@ export async function POST(req: NextRequest) {
     const { scenarioId, messages } = body;
 
     const scenario = scenarios[scenarioId] ?? scenarios['chest-pain'];
+    const isClinical = scenario.mode === 'clinical';
+    const secondaryLabel = isClinical ? 'Professionalism' : 'Empathy';
 
     const transcript = messages
       .map((msg: { role: string; content: string }) => {
         const speaker =
           msg.role === 'user'
             ? 'Nurse'
-            : scenario.mode === 'clinical'
+            : isClinical
             ? 'Doctor'
             : 'Patient';
 
@@ -22,13 +24,9 @@ export async function POST(req: NextRequest) {
       })
       .join('\n');
 
-    const secondaryLabel =
-      scenario.mode === 'clinical' ? 'Professionalism' : 'Empathy';
-
-    const secondaryExplanation =
-      scenario.mode === 'clinical'
-        ? 'For clinical communication, the secondary score must be Professionalism. Judge calmness, concise wording, confidence, appropriate tone, and how well the nurse communicates under pressure with another clinician.'
-        : 'For patient communication, the secondary score must be Empathy. Judge warmth, reassurance, emotional awareness, and whether the nurse sounds human and supportive when appropriate.';
+    const secondaryExplanation = isClinical
+      ? 'For clinical communication, the secondary score must be Professionalism. Judge calmness, concise wording, confidence, appropriate tone, and how well the nurse communicates under pressure with another clinician.'
+      : 'For patient communication, the secondary score must be Empathy. Judge warmth, reassurance, emotional awareness, and whether the nurse sounds human and supportive when appropriate.';
 
     const prompt = `
 You are evaluating a clinical English communication simulation.
@@ -44,6 +42,8 @@ Prioritize clarity, efficiency, and calm professionalism over "perfect" or overl
 Prefer spoken nurse language over written-report language. Avoid sounding corporate, therapy-like, excessively diplomatic, or unnaturally refined. The output should sound like something a competent nurse could realistically say out loud in a real Canadian clinical interaction.
 
 For empathy, ensure the phrasing briefly acknowledges the patient’s emotional state in a natural and supportive way, without becoming overly sentimental, wordy, or soft. For assertiveness, ensure the phrasing is clear, direct, and confident, without sounding cold, rigid, or confrontational.
+
+In clinical (doctor) communication, the first alternative version should prioritize clearer, more direct communication rather than empathy. However, keep the JSON key name "more_empathetic" unchanged for consistency with the frontend. In clinical mode, that field should contain a clearer / more direct version, not a warmer patient-facing one.
 
 All suggestions should feel practical, human, and usable immediately in a real clinical setting, rather than idealized or overly refined versions of English.
 
@@ -92,8 +92,13 @@ Important instructions:
 - "strengths" should focus on communication strengths, not medical correctness.
 - "language_improvements" should focus on wording, phrasing, tone, awkwardness, robotic wording, or unclear English.
 - "better_phrasing_example" should pick ONE nurse line from the interaction that could be improved and provide a better, more natural spoken version.
-- "alternative_versions.more_empathetic" should offer a more empathetic version of the nurse’s communication style, but still sound realistic and concise.
-- "alternative_versions.more_assertive" should offer a more confident / concise / professionally assertive version, but still sound like real spoken clinical English.
+- "alternative_versions.more_empathetic" should offer:
+  ${
+    isClinical
+      ? 'a clearer, more direct, and more professionally usable version of the nurse’s communication.'
+      : 'a more empathetic version of the nurse’s communication style.'
+  }
+- "alternative_versions.more_assertive" should offer a more confident / concise / professionally assertive version.
 - "recommended_next_line" must always be the next thing the NURSE should say.
 - In patient mode, this should usually be a natural next patient-facing question or statement.
 - In clinical mode, this should usually be a concise next line to the doctor.
@@ -112,9 +117,9 @@ Important instructions:
     const text = response.output_text.trim();
 
     const cleaned = text
-      .replace(/^```json\\s*/i, '')
-      .replace(/^```\\s*/i, '')
-      .replace(/\\s*```$/i, '')
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/i, '')
+      .replace(/\s*```$/i, '')
       .trim();
 
     let parsed;

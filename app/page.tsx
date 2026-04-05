@@ -456,9 +456,9 @@ export default function Home() {
               <h3 className="font-semibold">Alternative Versions</h3>
               <div>
                 <p className="text-sm text-gray-600 mb-1">
-                  More Empathetic
-                </p>
-                <p>{structuredFeedback.alternative_versions.more_empathetic}</p>
+  {mode === 'clinical' ? 'More Clear' : 'More Empathetic'}
+</p>
+<p>{structuredFeedback.alternative_versions.more_empathetic}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-600 mb-1">
