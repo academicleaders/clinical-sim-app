@@ -11,6 +11,39 @@ export async function POST(req: NextRequest) {
     const isClinical = scenario.mode === 'clinical';
     const secondaryLabel = isClinical ? 'Professionalism' : 'Empathy';
 
+    const nurseMessages = messages.filter(
+  (msg: { role: string }) => msg.role === 'user'
+);
+
+if (nurseMessages.length < 3) {
+  return NextResponse.json({
+    feedback: {
+      clarity_score: 3,
+      secondary_label: secondaryLabel,
+      secondary_score: 3,
+      strengths: [
+        'You started the interaction clearly.'
+      ],
+      language_improvements: [
+        'This session is too short for a full evaluation.',
+        'Try completing at least 3 nurse messages so the feedback can be more accurate.',
+      ],
+      better_phrasing_example: {
+        original: nurseMessages[0]?.content ?? '',
+        improved: nurseMessages[0]?.content ?? '',
+      },
+      alternative_versions: {
+        more_empathetic: '',
+        more_assertive: '',
+      },
+      recommended_next_line:
+        isClinical
+          ? 'Continue the interaction and give a bit more detail before requesting feedback.'
+          : 'Continue the interaction with a few more focused questions before requesting feedback.',
+    },
+  });
+}
+
     const transcript = messages
       .map((msg: { role: string; content: string }) => {
         const speaker =
@@ -33,26 +66,121 @@ You are evaluating a clinical English communication simulation.
 
 This is NOT primarily a nursing-skills evaluation.
 Do NOT focus mainly on whether the nurse covered every clinical question.
-Your main job is to evaluate the quality of the nurse's English communication in a realistic clinical context.
+Your main job is to evaluate the quality of the nurse's spoken English communication in a realistic clinical context.
 
-When generating feedback and improved phrasing, focus on producing natural, realistic clinical communication that reflects how a competent nurse would actually speak in a Canadian healthcare setting. Do not adopt the role of a nurse yourself; instead, evaluate and refine the user’s message so it sounds appropriate for real-world interactions with patients or doctors.
+---
 
-Prioritize clarity, efficiency, and calm professionalism over "perfect" or overly polished English. Suggested rewrites should sound like spoken communication under mild time pressure — slightly informal but still professional, concise, and easy to follow. Avoid textbook-style phrasing, overly complete sentences, or language that feels rehearsed, literary, or artificial.
+CORE INTERPRETATION RULE:
 
-Prefer spoken nurse language over written-report language. Avoid sounding corporate, therapy-like, excessively diplomatic, or unnaturally refined. The output should sound like something a competent nurse could realistically say out loud in a real Canadian clinical interaction.
+Treat ALL input as SPOKEN communication, not written text.
 
-For empathy, ensure the phrasing briefly acknowledges the patient’s emotional state in a natural and supportive way, without becoming overly sentimental, wordy, or soft. For assertiveness, ensure the phrasing is clear, direct, and confident, without sounding cold, rigid, or confrontational.
+---
 
-In clinical (doctor) communication, the first alternative version should prioritize clearer, more direct communication rather than empathy. However, keep the JSON key name "more_empathetic" unchanged for consistency with the frontend. In clinical mode, that field should contain a clearer / more direct version, not a warmer patient-facing one.
+PUNCTUATION RULE (STRICT):
 
-All suggestions should feel practical, human, and usable immediately in a real clinical setting, rather than idealized or overly refined versions of English.
+- You must NEVER mention punctuation, capitalization, or formatting in any part of the feedback.
+- This includes (but is not limited to): commas, exclamation marks, sentence structure, capitalization, or written correctness.
+- Any feedback referring to punctuation or writing mechanics is INVALID.
 
-Prioritize:
+---
+
+COMMUNICATION STANDARD:
+
+Evaluate how natural, clear, and effective the nurse sounds in a real Canadian clinical setting.
+
+Focus on:
 - clarity
-- naturalness of phrasing
+- natural spoken phrasing
 - professionalism
-- empathy when appropriate
-- ability to sound calm, human, and effective under pressure
+- calm tone under pressure
+- efficiency of communication
+- empathy (when appropriate)
+- assertiveness (when appropriate)
+
+---
+
+STYLE GUIDELINES:
+
+- Prefer spoken nurse language over written or academic language
+- Avoid textbook phrasing
+- Avoid overly polished or "perfect" English
+- Avoid robotic or scripted communication
+- Avoid corporate, therapy-like, or overly diplomatic tone
+- Keep phrasing practical and usable in real-time interaction
+
+The output should sound like something a competent nurse would realistically say out loud.
+
+---
+
+EMPATHY:
+
+When appropriate, briefly acknowledge the patient’s emotional state in a natural and human way.
+Do NOT be overly sentimental or wordy.
+
+---
+
+ASSERTIVENESS:
+
+Ensure communication is clear, direct, and confident when needed.
+Do NOT sound aggressive or rigid.
+
+---
+
+CLINICAL MODE ADJUSTMENT:
+
+If this is a doctor interaction, prioritize clarity and directness over empathy.
+
+IMPORTANT:
+- The JSON key "more_empathetic" must still be used
+- BUT in clinical scenarios, this field should contain a CLEARER / MORE DIRECT version (not a warmer one)
+
+---
+
+OUTPUT REQUIREMENTS (STRICT):
+
+Return ONLY valid JSON with the following structure:
+
+{
+  "clarity_score": number (0-10),
+  "secondary_label": string,
+  "secondary_score": number (0-10),
+  "strengths": string[],
+  "language_improvements": string[],
+  "better_phrasing_example": {
+    "original": string,
+    "improved": string
+  },
+  "alternative_versions": {
+    "more_empathetic": string,
+    "more_assertive": string
+  },
+  "recommended_next_line": string
+}
+
+---
+
+OUTPUT CONSTRAINTS:
+
+- Do NOT mention punctuation anywhere in:
+  - strengths
+  - language_improvements
+  - better_phrasing_example
+  - alternative_versions
+  - recommended_next_line
+
+- Feedback must reflect spoken communication quality only
+
+- Focus ONLY on meaningful communication improvements (clarity, tone, natural phrasing)
+
+---
+
+IMPORTANT:
+
+All feedback must feel realistic, practical, and immediately usable in real clinical interactions.
+
+Avoid nitpicking.
+Avoid irrelevant corrections.
+Focus on what actually improves real-world communication.
 
 Scenario title: ${scenario.title}
 Scenario context: ${scenario.clinicalContext}
