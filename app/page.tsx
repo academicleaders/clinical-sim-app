@@ -123,6 +123,10 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
   title: 'Concerned Family Member Scenario',
   subtitle: 'Hospital communication with a worried family member seeking reassurance and clarity.',
 },
+'deteriorating-condition-family': {
+  title: 'Deteriorating Condition Scenario',
+  subtitle: 'Hospital communication with a family member worried that their loved one is getting worse.',
+},
 };
 
 export default function Home() {
@@ -252,6 +256,7 @@ export default function Home() {
     { id: 'jargon-doctor', mode: 'clinical' as const },
     { id: 'concerned-family-member', mode: 'family' as const },
     { id: 'angry-family-member', mode: 'family' as const },
+    { id: 'deteriorating-condition-family', mode: 'family' as const },
   ];
 
   const visibleScenarios = allScenarios.filter(
