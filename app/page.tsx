@@ -124,6 +124,10 @@ export default function Home() {
   const [characterProfile, setCharacterProfile] =
     useState<CharacterProfile>(generateRandomCharacter());
   const [messages, setMessages] = useState<Message[]>([]);
+  const MAX_MESSAGES = 12;
+  const nurseMessageCount = messages.filter(
+    (msg) => msg.role === 'user'
+  ).length;  
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<FeedbackData | null>(null);
@@ -144,7 +148,7 @@ export default function Home() {
   };
 
   const handleSend = async () => {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || nurseMessageCount >= MAX_MESSAGES) return;
 
     const userMessage: Message = {
       role: 'user',
@@ -359,6 +363,12 @@ export default function Home() {
               <p className="text-black">Typing...</p>
             </div>
           )}
+          {nurseMessageCount >= MAX_MESSAGES && (
+  <div className="text-sm text-red-600 mt-2">
+    Session limit reached. Please get feedback or start a new session.
+  </div>
+)}
+
         </div>
 
         <div className="flex gap-2 mb-4">
@@ -377,7 +387,7 @@ export default function Home() {
           />
           <button
             onClick={handleSend}
-            disabled={loading}
+            disabled={loading || nurseMessageCount >= MAX_MESSAGES}
             className="bg-black text-white px-4 py-2 rounded disabled:opacity-50"
           >
             Send
