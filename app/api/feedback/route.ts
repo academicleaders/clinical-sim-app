@@ -88,6 +88,11 @@ COMMUNICATION STANDARD:
 
 Evaluate how natural, clear, and effective the nurse sounds in a real Canadian clinical setting.
 
+Use this context as a professional reference point, not a cultural one.
+
+Do NOT make general statements about "Canadian communication style".
+Focus only on observable communication behaviors in a clinical setting.
+
 Focus on:
 - clarity
 - natural spoken phrasing
@@ -99,14 +104,40 @@ Focus on:
 
 ---
 
+CONTEXTUAL ANCHORING (USE SPARINGLY):
+
+You may occasionally use a short phrase such as:
+
+"In a Canadian hospital setting..."
+
+ONLY when it makes the feedback more concrete or practical.
+
+When used, it must:
+
+- refer to a specific communication behavior (e.g., urgency, directness, prioritization)
+- improve clarity of the feedback
+- sound natural and professional
+
+Avoid:
+
+- generic or vague statements
+- repeated use across feedback
+- cultural explanations or commentary
+
+The goal is to make feedback more grounded in real clinical communication, not more abstract.
+
+---
+
 STYLE GUIDELINES:
 
 - Prefer spoken nurse language over written or academic language
-- Avoid textbook phrasing
+- Avoid textbook phring
 - Avoid overly polished or "perfect" English
 - Avoid robotic or scripted communication
 - Avoid corporate, therapy-like, or overly diplomatic tone
 - Keep phrasing practical and usable in real-time interaction
+
+Whenever suggesting improvements, prefer concrete rephrasing over abstract advice.
 
 The output should sound like something a competent nurse would realistically say out loud.
 
@@ -170,6 +201,8 @@ OUTPUT CONSTRAINTS:
 
 - Feedback must reflect spoken communication quality only
 
+- Avoid vague feedback such as "be more clear" or "improve tone". All feedback must be specific and actionable.
+
 - Focus ONLY on meaningful communication improvements (clarity, tone, natural phrasing)
 
 ---
@@ -182,15 +215,19 @@ Avoid nitpicking.
 Avoid irrelevant corrections.
 Focus on what actually improves real-world communication.
 
+---
+
 Scenario title: ${scenario.title}
 Scenario context: ${scenario.clinicalContext}
 Scenario mode: ${scenario.mode}
 
 Scenario-specific guidance:
-${scenario.evaluationCriteria.map((item) => `- ${item}`).join('\n')}
+${scenario.evaluationCriteria.map((item) => `- ${item}`).join('\\n')}
 
 Conversation transcript:
 ${transcript}
+
+---
 
 Return ONLY valid JSON in this exact format:
 
@@ -211,25 +248,32 @@ Return ONLY valid JSON in this exact format:
   "recommended_next_line": "..."
 }
 
+---
+
 Important instructions:
+
 - Score from 1 to 10.
 - "clarity_score" should reflect how clear, natural, and easy to follow the nurse’s language was.
 - "secondary_label" must be exactly "${secondaryLabel}".
 - "secondary_score" must evaluate the meaning of "${secondaryLabel}", not a generic second score.
 - ${secondaryExplanation}
 - "strengths" should focus on communication strengths, not medical correctness.
-- "language_improvements" should focus on wording, phrasing, tone, awkwardness, robotic wording, or unclear English.
+- "language_improvements" should focus on wording, phrasing, tone, awkwardness, or unclear spoken English.
 - "better_phrasing_example" should pick ONE nurse line from the interaction that could be improved and provide a better, more natural spoken version.
+
 - "alternative_versions.more_empathetic" should offer:
   ${
     isClinical
       ? 'a clearer, more direct, and more professionally usable version of the nurse’s communication.'
       : 'a more empathetic version of the nurse’s communication style.'
   }
+
 - "alternative_versions.more_assertive" should offer a more confident / concise / professionally assertive version.
+
 - "recommended_next_line" must always be the next thing the NURSE should say.
 - In patient mode, this should usually be a natural next patient-facing question or statement.
 - In clinical mode, this should usually be a concise next line to the doctor.
+
 - Avoid overcorrecting into stiff or overly polished English.
 - Do not use markdown.
 - Do not wrap the JSON in code fences.
