@@ -31,6 +31,8 @@ export async function POST(req: NextRequest) {
             ? 'Nurse'
             : scenario.mode === 'clinical'
             ? 'Doctor'
+            : scenario.mode === 'family'
+            ? 'Family Member'
             : 'Patient';
 
         return `${speaker}: ${msg.content}`;
@@ -56,6 +58,13 @@ The user is the nurse.
 You must respond as the doctor only.
 Be realistic, concise, and appropriate to the scenario.
 Do not speak as a patient.
+Do not explain that you are an AI.`
+: scenario.mode === 'family'
+    ? `You are a family member speaking with a nurse about a loved one.
+The user is the nurse.
+You must respond as the family member only.
+You are not the patient.
+Be realistic, emotionally believable, and appropriate to the scenario.
 Do not explain that you are an AI.`
     : `You are a patient speaking with a nurse.
 The user is the nurse.

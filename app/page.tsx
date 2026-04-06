@@ -115,11 +115,15 @@ const scenarioMeta: Record<string, { title: string; subtitle: string }> = {
     title: 'Minimizing Doctor Scenario',
     subtitle: 'Clinical communication with a doctor who initially downplays the concern.',
   },
+  'concerned-family-member': {
+  title: 'Concerned Family Member Scenario',
+  subtitle: 'Hospital communication with a worried family member seeking reassurance and clarity.',
+},
 };
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
-  const [mode, setMode] = useState<'patient' | 'clinical'>('patient');
+  const [mode, setMode] = useState<'patient' | 'clinical' | 'family'>('patient');
   const [scenarioId, setScenarioId] = useState('chest-pain');
   const [characterProfile, setCharacterProfile] =
     useState<CharacterProfile>(generateRandomCharacter());
@@ -242,6 +246,7 @@ export default function Home() {
     { id: 'limited-english-patient', mode: 'patient' as const },
     { id: 'minimizing-doctor', mode: 'clinical' as const },
     { id: 'jargon-doctor', mode: 'clinical' as const },
+    { id: 'concerned-family-member', mode: 'family' as const },
   ];
 
   const visibleScenarios = allScenarios.filter(
@@ -267,22 +272,26 @@ export default function Home() {
             <select
               value={mode}
               onChange={(e) => {
-                const newMode = e.target.value as 'patient' | 'clinical';
+                const newMode = e.target.value as 'patient' | 'clinical'| 'family';
                 setMode(newMode);
                 setMessages([]);
                 setFeedback(null);
 
                 if (newMode === 'patient') {
-                  setScenarioId('chest-pain');
-                  setCharacterProfile(generateRandomCharacter());
-                } else {
-                  setScenarioId('busy-doctor-handoff');
-                }
+  setScenarioId('chest-pain');
+  setCharacterProfile(generateRandomCharacter());
+} else if (newMode === 'clinical') {
+  setScenarioId('busy-doctor-handoff');
+} else {
+  setScenarioId('concerned-family-member');
+}
+
               }}
               className="border border-black rounded p-2 flex-1 bg-white text-black"
             >
               <option value="patient">Patient Communication</option>
               <option value="clinical">Clinical Communication</option>
+              <option value="family">Family Communication</option>
             </select>
           </div>
 
@@ -349,6 +358,8 @@ export default function Home() {
                   ? 'You'
                   : mode === 'clinical'
                   ? 'Doctor'
+                  : mode === 'family'
+                  ? 'Family Member'
                   : 'Patient'}
               </p>
               <p className="text-black">{msg.content}</p>
@@ -358,7 +369,11 @@ export default function Home() {
           {loading && (
             <div className="p-3 rounded max-w-[80%] bg-gray-200 border border-gray-300 mr-auto text-black">
               <p className="text-sm font-medium mb-1 text-black">
-                {mode === 'clinical' ? 'Doctor' : 'Patient'}
+                {mode === 'clinical' 
+                ? 'Doctor' 
+                :mode === 'family'
+                ? 'Family Member'
+                : 'Patient'}
               </p>
               <p className="text-black">Typing...</p>
             </div>
@@ -379,6 +394,8 @@ export default function Home() {
             placeholder={
               mode === 'clinical'
                 ? 'Speak to the doctor...'
+                :mode === 'family'
+                ? 'Speak to the family member...'
                 : 'Ask the patient a question...'
             }
             onKeyDown={(e) => {
