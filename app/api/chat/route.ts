@@ -100,8 +100,12 @@ Conversation so far:
 ${transcript || 'Nurse has not said anything yet.'}
 
 Respond with ONLY the next reply from the ${
-      scenario.mode === 'clinical' ? 'doctor' : 'patient'
-    }.
+  scenario.mode === 'clinical'
+    ? 'doctor'
+    : scenario.mode === 'family'
+    ? 'family member'
+    : 'patient'
+}.
 Do not include labels like "Doctor:" or "Patient:".
 Do not add explanations.
 Just write the natural next reply.
